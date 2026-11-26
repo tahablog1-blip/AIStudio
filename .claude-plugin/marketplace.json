@@ -1,0 +1,11 @@
+{
+  "name": "ai-studio-marketplace",
+  "owner": { "name": "ورشة AI" },
+  "plugins": [
+    {
+      "name": "ai-studio",
+      "source": "./",
+      "description": "AI video production studio: 31 specialised agents + executable editing/VFX/motion/colour/audio/QC skills"
+    }
+  ]
+}
