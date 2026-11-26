@@ -1,0 +1,11 @@
+numpy
+scipy
+opencv-python-headless>=4.9
+rembg[cpu]
+faster-whisper
+piper-tts
+opentimelineio
+otio-fcp-adapter
+otio-cmx3600-adapter
+Pillow
+# system: ffmpeg>=6 (with libvidstab, libass, zscale), node + playwright chromium, blender>=4.0

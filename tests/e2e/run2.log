@@ -1,0 +1,50 @@
+02:59:12 [production-manager] recovered 1 interrupted task(s): ['edit']
+02:59:12 [commercial-editor] assemble attempt 1: تجميع الإعلان على طول التعليق
+02:59:13 [lead-editor] edit attempt 2: رندر المونتاج
+02:59:13 [lead-editor] nle-export attempt 1: مشروع قابل للتعديل (Premiere/Resolve XML + EDL)
+02:59:51 [social-editor] vertical attempt 1: نسخة عمودية 9:16 (من المونتاج النظيف)
+02:59:51 [sound-engineer] mix attempt 1: المكس النهائي
+02:59:53 [lead-editor] conform attempt 1: النسخة النهائية (صورة+صوت+ترجمة)
+03:01:02 [social-editor] conform-vertical attempt 1: العمودي النهائي
+03:01:05 [encoding-engineer] export-main attempt 1: تصدير المنصات الأفقية
+03:01:05 [thumbnail-designer] thumbnail attempt 1: صورتين مصغّرتين A/B
+03:02:24 [encoding-engineer] export-vertical attempt 1: تصدير العمودي
+03:03:17 [quality-control] qc attempt 1: فحص الجودة النهائي
+03:03:28 [executive-producer] deliver attempt 1: الاعتماد والتسليم
+Project: FastDM Ad  —  progress 100.0%
+  done         camera-report          cinematographer            v001  تحليل تقني للمواد الخام
+  done         style                  creative-director          v001  دليل الأسلوب
+  done         script                 screenwriter               v001  تجهيز نص التعليق الصوتي
+  done         shotlist               film-director              v001  قائمة اللقطات
+  approved     storyboard             storyboard-artist          v001  لوحة الستوري بورد
+  done         vo                     voice-over                 v001  تعليق صوتي
+  done         vo-align               voice-over                 v001  توقيت كل كلمة
+  done         enhance-1              video-enhancement          v001  تحسين product_demo.mp4
+  done         correct-1              colorist                   v001  تصحيح ألوان product_demo.mp4
+  done         grade-1                color-grader               v001  معالجة سينمائية product_demo.mp4
+  done         enhance-2              video-enhancement          v001  تحسين product_race.mp4
+  done         correct-2              colorist                   v001  تصحيح ألوان product_race.mp4
+  done         grade-2                color-grader               v001  معالجة سينمائية product_race.mp4
+  done         enhance-3              video-enhancement          v001  تحسين dark_cast.mp4
+  done         correct-3              colorist                   v001  تصحيح ألوان dark_cast.mp4
+  done         grade-3                color-grader               v001  معالجة سينمائية dark_cast.mp4
+  done         intro                  intro-outro                v001  مقدمة الشعار
+  done         outro                  intro-outro                v001  خاتمة واشتراك
+  approved     gfx                    motion-designer            v001  مشاهد الموشن جرافيك
+  done         logo3d                 animator                   v001  شعار ثلاثي الأبعاد
+  done         music                  sound-designer             v001  موسيقى خلفية
+  done         sfx-lib                sound-designer             v001  مكتبة مؤثرات
+  done         assemble               commercial-editor          v002  تجميع الإعلان على طول التعليق
+  done         edit                   lead-editor                v001  رندر المونتاج
+  done         nle-export             lead-editor                v002  مشروع قابل للتعديل (Premiere/Resolve XML + EDL)
+  done         captions               lead-editor                v001  ترجمة كاريوكي
+  done         mix                    sound-engineer             v001  المكس النهائي
+  approved     conform                lead-editor                v001  النسخة النهائية (صورة+صوت+ترجمة)
+  done         export-main            encoding-engineer          v001  تصدير المنصات الأفقية
+  done         vertical               social-editor              v001  نسخة عمودية 9:16 (من المونتاج النظيف)
+  done         captions-vertical      social-editor              v001  ترجمة مقاس العمودي
+  done         conform-vertical       social-editor              v001  العمودي النهائي
+  done         export-vertical        encoding-engineer          v001  تصدير العمودي
+  done         thumbnail              thumbnail-designer         v001  صورتين مصغّرتين A/B
+  done         qc                     quality-control            v001  فحص الجودة النهائي
+  done         deliver                executive-producer         v001  الاعتماد والتسليم

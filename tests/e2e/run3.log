@@ -1,0 +1,57 @@
+03:06:25 [colorist] correct-1 attempt 1: تصحيح ألوان product_demo.mp4
+03:06:25 [lead-editor] captions attempt 1: ترجمة كاريوكي (طبقة شفافة RTL)
+03:06:25 [colorist] correct-2 attempt 1: تصحيح ألوان product_race.mp4
+03:06:25 [colorist] correct-3 attempt 1: تصحيح ألوان dark_cast.mp4
+03:06:45 [social-editor] captions-vertical attempt 1: ترجمة مقاس العمودي
+03:07:00 [color-grader] grade-2 attempt 1: معالجة سينمائية product_race.mp4
+03:07:26 [color-grader] grade-1 attempt 1: معالجة سينمائية product_demo.mp4
+03:07:42 [color-grader] grade-3 attempt 1: معالجة سينمائية dark_cast.mp4
+03:09:17 [commercial-editor] assemble attempt 1: تجميع الإعلان على طول التعليق
+03:09:18 [lead-editor] nle-export attempt 1: مشروع قابل للتعديل (Premiere/Resolve XML + EDL)
+03:09:18 [lead-editor] edit attempt 1: رندر المونتاج
+03:10:03 [sound-engineer] mix attempt 1: المكس النهائي
+03:10:03 [social-editor] vertical attempt 1: نسخة عمودية 9:16 (من المونتاج النظيف)
+03:10:05 [lead-editor] conform attempt 1: النسخة النهائية (صورة+صوت+ترجمة)
+03:11:02 [social-editor] conform-vertical attempt 1: العمودي النهائي
+03:11:12 [encoding-engineer] export-main attempt 1: تصدير المنصات الأفقية
+03:11:12 [thumbnail-designer] thumbnail attempt 1: صورتين مصغّرتين A/B
+03:12:00 [encoding-engineer] export-vertical attempt 1: تصدير العمودي
+03:12:56 [quality-control] qc attempt 1: فحص الجودة النهائي
+03:13:07 [executive-producer] deliver attempt 1: الاعتماد والتسليم
+Project: FastDM Ad  —  progress 100.0%
+  done         camera-report          cinematographer            v001  تحليل تقني للمواد الخام
+  done         style                  creative-director          v001  دليل الأسلوب
+  done         script                 screenwriter               v001  تجهيز نص التعليق الصوتي
+  done         shotlist               film-director              v001  قائمة اللقطات
+  approved     storyboard             storyboard-artist          v001  لوحة الستوري بورد
+  done         vo                     voice-over                 v001  تعليق صوتي
+  done         vo-align               voice-over                 v001  توقيت كل كلمة
+  done         enhance-1              video-enhancement          v001  تحسين product_demo.mp4
+  done         correct-1              colorist                   v002  تصحيح ألوان product_demo.mp4
+  done         grade-1                color-grader               v002  معالجة سينمائية product_demo.mp4
+  done         enhance-2              video-enhancement          v001  تحسين product_race.mp4
+  done         correct-2              colorist                   v002  تصحيح ألوان product_race.mp4
+  done         grade-2                color-grader               v002  معالجة سينمائية product_race.mp4
+  done         enhance-3              video-enhancement          v001  تحسين dark_cast.mp4
+  done         correct-3              colorist                   v002  تصحيح ألوان dark_cast.mp4
+  done         grade-3                color-grader               v002  معالجة سينمائية dark_cast.mp4
+  done         intro                  intro-outro                v001  مقدمة الشعار
+  done         outro                  intro-outro                v001  خاتمة واشتراك
+  approved     gfx                    motion-designer            v001  مشاهد الموشن جرافيك
+  done         logo3d                 animator                   v001  شعار ثلاثي الأبعاد
+  done         music                  sound-designer             v001  موسيقى خلفية
+  done         sfx-lib                sound-designer             v001  مكتبة مؤثرات
+  done         assemble               commercial-editor          v003  تجميع الإعلان على طول التعليق
+  done         edit                   lead-editor                v002  رندر المونتاج
+  done         nle-export             lead-editor                v003  مشروع قابل للتعديل (Premiere/Resolve XML + EDL)
+  done         captions               lead-editor                v002  ترجمة كاريوكي (طبقة شفافة RTL)
+  done         mix                    sound-engineer             v002  المكس النهائي
+  approved     conform                lead-editor                v002  النسخة النهائية (صورة+صوت+ترجمة)
+  done         export-main            encoding-engineer          v002  تصدير المنصات الأفقية
+  done         vertical               social-editor              v002  نسخة عمودية 9:16 (من المونتاج النظيف)
+  done         captions-vertical      social-editor              v002  ترجمة مقاس العمودي
+  done         conform-vertical       social-editor              v002  العمودي النهائي
+  done         export-vertical        encoding-engineer          v002  تصدير العمودي
+  done         thumbnail              thumbnail-designer         v002  صورتين مصغّرتين A/B
+  done         qc                     quality-control            v002  فحص الجودة النهائي
+  done         deliver                executive-producer         v002  الاعتماد والتسليم

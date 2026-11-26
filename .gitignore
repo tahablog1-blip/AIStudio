@@ -1,0 +1,6 @@
+__pycache__/
+projects/*/
+tests/results/
+tests/e2e/run.log
+assets/voices/*.onnx
+*.trf

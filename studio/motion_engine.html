@@ -1,0 +1,146 @@
+<!doctype html><html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:Cairo;font-weight:700;src:url("../assets/fonts/Cairo-Bold.ttf")}
+@font-face{font-family:Cairo;font-weight:900;src:url("../assets/fonts/Cairo-Black.ttf")}
+*{box-sizing:border-box;margin:0}
+html,body{overflow:hidden;font-family:Cairo,sans-serif}
+#bg{position:fixed;inset:0;overflow:hidden}
+#grid{position:absolute;inset:-200px;background-size:80px 80px}
+.glow{position:absolute;width:60vw;height:60vw;border-radius:50%;filter:blur(140px);opacity:.75}
+#stage{position:fixed;inset:0}
+.slide{position:absolute;inset:0;display:none}
+.c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:6vh 6vw 14vh}
+.k{color:var(--accent)}.p{color:var(--primary)}.m{color:var(--muted)}
+.h1{font-size:calc(var(--u)*11);font-weight:900;line-height:1.15}
+.h2{font-size:calc(var(--u)*6);font-weight:900;line-height:1.25}
+.h3{font-size:calc(var(--u)*4);font-weight:700}
+.pill{display:inline-block;background:var(--primary);color:var(--bg);border-radius:calc(var(--u)*2);padding:0 calc(var(--u)*2.5) calc(var(--u)*.8);font-weight:900}
+.card{background:var(--card);border:3px solid var(--line);border-radius:calc(var(--u)*2.2);padding:calc(var(--u)*2.5) calc(var(--u)*3.5)}
+.lt{position:absolute;bottom:12%;inset-inline-start:5%;display:flex;flex-direction:column;align-items:flex-start;gap:calc(var(--u)*.6)}
+.lt .n{background:var(--primary);color:var(--bg);font-size:calc(var(--u)*4.4);font-weight:900;padding:0 calc(var(--u)*2) calc(var(--u)*.6);border-radius:calc(var(--u)*.8)}
+.lt .r{background:var(--card);color:var(--text);font-size:calc(var(--u)*2.8);font-weight:700;padding:0 calc(var(--u)*2) calc(var(--u)*.4);border-radius:calc(var(--u)*.8)}
+.btn{display:inline-block;background:var(--accent);color:var(--bg);font-size:calc(var(--u)*4.5);font-weight:900;border-radius:999px;padding:calc(var(--u)*.6) calc(var(--u)*4) calc(var(--u)*1.4)}
+.item{display:flex;align-items:center;gap:calc(var(--u)*2);font-size:calc(var(--u)*4);font-weight:800;margin:calc(var(--u)*1) 0;background:var(--card);border:2px solid var(--line);border-radius:calc(var(--u)*1.6);padding:calc(var(--u)*1) calc(var(--u)*2.5);min-width:60%}
+.item b{width:calc(var(--u)*6);height:calc(var(--u)*6);border-radius:50%;background:var(--accent);color:var(--bg);display:grid;place-items:center;flex:none}
+.ph{width:calc(var(--u)*36);height:calc(var(--u)*20);border-radius:calc(var(--u)*1.5);border:3px dashed var(--line);display:grid;place-items:center;color:var(--muted);font-size:calc(var(--u)*2.6)}
+#cap{position:fixed;left:0;right:0;bottom:4%;display:flex;justify-content:center;z-index:9}
+#cap p{max-width:88%;text-align:center;font-size:calc(var(--u)*5.4);font-weight:900;line-height:1.45;color:#fff;-webkit-text-stroke:calc(var(--u)*.9) #000;paint-order:stroke fill}
+#cap span{display:inline-block;margin:0 .12em}
+.conf{position:fixed;width:calc(var(--u)*1.6);height:calc(var(--u)*2.4);border-radius:3px}
+</style></head><body>
+<div id="bg"><div class="glow" id="g1"></div><div class="glow" id="g2"></div><div id="grid"></div></div>
+<div id="stage"></div><div id="cap"><p id="capt"></p></div>
+<script>
+let SPEC, slides = [], SFX = [], CAP = null;
+const clamp = x => Math.max(0, Math.min(1, x));
+const outBack = p => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2); };
+const outCubic = p => 1 - Math.pow(1 - p, 3);
+const A = (a, at, sfx, more = '') => `data-a="${a}" data-at="${at}" ${sfx ? `data-sfx="${sfx}"` : ''} ${more}`;
+const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;');
+
+const T = {
+  title: p => `<div class="c"><div class="h3 k" ${A('down', 0.05)}>${esc(p.kicker)}</div>
+     <div class="h1" ${A('pop', 0.15, 'pop')}>${esc(p.title)}</div>
+     ${p.highlight ? `<div class="h2" ${A('stamp', 0.7, 'stamp')} style="margin-top:2vh"><span class="pill">${esc(p.highlight)}</span></div>` : ''}
+     <div class="h3 m" ${A('up', 1.0)} style="margin-top:2vh">${esc(p.subtitle)}</div></div>`,
+  lower_third: p => `<div class="lt"><div class="n" ${A('left', 0.1, 'whoosh_s')}>${esc(p.name)}</div><div class="r" ${A('left', 0.35)}>${esc(p.role)}</div></div>`,
+  kinetic: p => `<div class="c"><div class="h1" style="display:flex;flex-wrap:wrap;gap:0 .3em;justify-content:center">${(p.words || []).map((w, i) =>
+     `<span ${A(i % 3 === 2 ? 'stamp' : 'pop', (p.gap || 0.35) * i + 0.05, i % 3 === 2 ? 'stamp' : 'pop_hi')} class="${i % 3 === 2 ? 'p' : ''}">${esc(w)}</span>`).join('')}</div></div>`,
+  bullets: p => `<div class="c"><div class="h2" ${A('down', 0.05)} style="margin-bottom:3vh">${esc(p.heading)}</div>
+     ${(p.items || []).map((it, i) => `<div class="item" ${A(p.dir === 'ltr' ? 'right' : 'left', 0.5 + i * (p.gap || 0.6), 'whoosh_s')}><b>${i + 1}</b>${esc(it)}</div>`).join('')}</div>`,
+  stat: p => `<div class="c"><div class="h3 m" ${A('fade', 0.05)}>${esc(p.label)}</div>
+     <div class="h1 p" style="font-size:calc(var(--u)*18)" ${A('count', 0.2, '', `data-to="${p.value}" data-dur="${p.dur || 1.6}" data-dec="${p.decimals || 0}" data-pre="${esc(p.prefix || '')}" data-suf="${esc(p.suffix || '')}"`)}>0</div>
+     <div class="h3" ${A('pop', (p.dur || 1.6) + 0.3, 'ding')}>${esc(p.caption)}</div></div>`,
+  compare: p => `<div class="c"><div style="display:flex;gap:4vw;align-items:center">
+     <div class="card" ${A('right', 0.1, 'whoosh_s')}><div style="font-size:calc(var(--u)*9)">${esc(p.left.icon)}</div><div class="h2">${esc(p.left.title)}</div><div class="h3 m">${esc(p.left.sub)}</div></div>
+     <div class="h1" ${A('stamp', 0.7, 'stamp')} style="font-size:calc(var(--u)*8)">${esc(p.vs || 'VS')}</div>
+     <div class="card" style="border-color:var(--primary)" ${A('left', 0.4, 'whoosh_s')}><div style="font-size:calc(var(--u)*9)">${esc(p.right.icon)}</div><div class="h2 p">${esc(p.right.title)}</div><div class="h3 m">${esc(p.right.sub)}</div></div></div></div>`,
+  cta: p => `<div class="c"><div class="h2" ${A('pop', 0.05, 'pop')}>${esc(p.text)}</div>
+     <div style="margin-top:4vh" ${A('pop', 0.6, 'riser', 'data-bob="1"')}><span class="btn">${esc(p.button)}</span></div></div>`,
+  logo_reveal: p => `<div class="c">${p.logo ? `<img src="${p.logo}" ${A('spin', 0.05, 'whoosh')} style="width:calc(var(--u)*26);border-radius:50%;box-shadow:0 0 8vh var(--accent)">` : ''}
+     <div class="h1" ${A('up', 0.6, 'pop')} style="margin-top:2vh">${esc(p.name)}</div>
+     <div class="h3 m" ${A('fade', 1.1, 'ding')}>${esc(p.tagline)}</div></div>`,
+  end_screen: p => `<div class="c"><div class="h2" ${A('down', 0.05, 'pop')}>${esc(p.title || '')}</div>
+     <div style="display:flex;gap:3vw;margin:4vh 0"><div class="ph" ${A('pop', 0.4, 'pop_hi')}>${esc(p.slot1 || 'فيديو مقترح')}</div><div class="ph" ${A('pop', 0.6, 'pop_hi')}>${esc(p.slot2 || 'قائمة تشغيل')}</div></div>
+     <div ${A('pop', 1.0, 'success', 'data-bob="1"')}><span class="btn" style="background:#ef4444;color:#fff">${esc(p.subscribe || 'اشترك')}</span></div>
+     <div id="conf" ${A('confetti', 1.1)}></div></div>`,
+  html: p => p.html,
+};
+
+window.build = spec => {
+  SPEC = spec; const st = spec.style || {}; const R = document.documentElement.style;
+  const W = spec.width, H = spec.height; document.body.style.width = W + 'px'; document.body.style.height = H + 'px';
+  R.setProperty('--u', Math.min(W, H) / 100 + 'px');
+  const col = Object.assign({ bg: '#0b1020', card: '#121a33', line: '#22305a', text: '#ffffff', muted: '#94a3b8', primary: '#a3e635', accent: '#22d3ee', glow1: '#1e3a8a', glow2: '#365314' }, st.colors || {});
+  for (const k in col) R.setProperty('--' + k, col[k]);
+  document.body.style.color = col.text; document.dir = st.dir || 'rtl';
+  if (st.font) document.body.style.fontFamily = st.font + ',Cairo,sans-serif';
+  const bg = document.getElementById('bg');
+  if (spec.transparent) { bg.style.display = 'none'; document.body.style.background = 'transparent'; }
+  else { bg.style.background = col.bg; document.getElementById('grid').style.backgroundImage = `linear-gradient(${col.line}55 2px,transparent 2px),linear-gradient(90deg,${col.line}55 2px,transparent 2px)`;
+         g1.style.background = col.glow1; g1.style.left = '-15%'; g1.style.top = '-30%'; g2.style.background = col.glow2; g2.style.right = '-20%'; g2.style.bottom = '-40%'; }
+  const stage = document.getElementById('stage');
+  spec.scenes.forEach((S, k) => {
+    const el = document.createElement('div'); el.className = 'slide'; el.innerHTML = T[S.template](S.params || {}); stage.appendChild(el);
+    const items = [...el.querySelectorAll('[data-a]')].map(e => {
+      const t0 = S.start + parseFloat(e.dataset.at);
+      if (e.dataset.sfx) SFX.push([+t0.toFixed(3), e.dataset.sfx]);
+      return { e, a: e.dataset.a, t0 };
+    });
+    if (k > 0 && S.transition !== 'none') SFX.push([+(S.start - 0.15).toFixed(3), 'whoosh']);
+    slides.push({ el, start: S.start, end: S.end, items, tr: S.transition || 'slide', exit: S.exit });
+    const cf = el.querySelector('#conf');
+    if (cf) for (let i = 0; i < 60; i++) { const c = document.createElement('div'); c.className = 'conf'; c.style.background = [col.primary, col.accent, '#ef4444', '#facc15', '#fff'][i % 5]; c.dataset.k = i; cf.appendChild(c); }
+  });
+  CAP = spec.captions || null;
+  if (!CAP) document.getElementById('cap').style.display = 'none';
+  SFX.sort((a, b) => a[0] - b[0]);
+  return SFX;
+};
+
+function applyItem(it, t) {
+  const { e, a, t0 } = it, lt = t - t0;
+  if (a === 'count') { const d = parseFloat(e.dataset.dur), to = parseFloat(e.dataset.to), p = outCubic(clamp(lt / d));
+    e.textContent = (e.dataset.pre || '') + (to * p).toFixed(+e.dataset.dec || 0) + (e.dataset.suf || ''); e.style.opacity = lt < 0 ? 0 : 1; return; }
+  if (a === 'confetti') { [...e.children].forEach(c => { const k = +c.dataset.k, ang = (k * 137.5) % 360 * Math.PI / 180, sp = (0.25 + ((k * 53) % 40) / 100) * SPEC.width;
+      const tt = Math.max(0, lt); c.style.opacity = lt < 0 || tt > 2.4 ? 0 : 1; c.style.left = (SPEC.width / 2 + Math.cos(ang) * sp * tt) + 'px';
+      c.style.top = (SPEC.height * 0.4 + Math.sin(ang) * sp * tt * 0.6 + SPEC.height * 0.8 * tt * tt - SPEC.height * 0.3 * tt) + 'px'; c.style.transform = `rotate(${k * 40 + tt * 600}deg)`; }); return; }
+  let op = 1, tr = ''; const p = clamp(lt / 0.45), u = SPEC.width / 100;
+  if (lt < 0) op = 0;
+  if (a === 'pop') tr = `scale(${lt < 0 ? .3 : .3 + .7 * outBack(clamp(lt / .38))})`;
+  else if (a === 'stamp') { const q = clamp(lt / .28); tr = `scale(${lt < 0 ? 2.4 : 2.4 - 1.4 * outCubic(q)}) rotate(${lt < 0 ? -8 : -8 * (1 - q)}deg)`; op = lt < 0 ? 0 : Math.min(1, q * 2); }
+  else if (a === 'up') { tr = `translateY(${(1 - outCubic(p)) * 5 * u}px)`; op = lt < 0 ? 0 : p; }
+  else if (a === 'down') { tr = `translateY(${-(1 - outCubic(p)) * 5 * u}px)`; op = lt < 0 ? 0 : p; }
+  else if (a === 'left') { tr = `translateX(${-(1 - outBack(p)) * 30 * u}px)`; op = lt < 0 ? 0 : Math.min(1, p * 2); }
+  else if (a === 'right') { tr = `translateX(${(1 - outBack(p)) * 30 * u}px)`; op = lt < 0 ? 0 : Math.min(1, p * 2); }
+  else if (a === 'fade') op = lt < 0 ? 0 : p;
+  else if (a === 'spin') { const q = clamp(lt / .6); tr = `scale(${lt < 0 ? 0 : outBack(q)}) rotate(${(1 - outCubic(q)) * -200}deg)`; }
+  if (e.dataset.bob && lt > .4) tr += ` translateY(${Math.sin(lt * 4) * u}px)`;
+  e.style.opacity = op; e.style.transform = tr;
+}
+
+window.setT = t => {
+  if (!SPEC.transparent) { grid.style.transform = `translate(${(t * 18) % 80}px,${(t * 9) % 80}px)`;
+    g1.style.transform = `translate(${Math.sin(t * .3) * 160}px,${Math.cos(t * .23) * 120}px)`; g2.style.transform = `translate(${Math.cos(t * .27) * 180}px,${Math.sin(t * .2) * 140}px)`; }
+  slides.forEach(s => s.el.style.display = 'none');
+  const k = slides.findIndex((s, i) => t >= s.start && t < s.end);
+  if (k >= 0) {
+    const cur = slides[k], lt = t - cur.start, TR = 0.42;
+    cur.el.style.display = 'block';
+    const prev = k > 0 && slides[k - 1].end >= cur.start - 0.01 ? slides[k - 1] : null;
+    if (prev && lt < TR && cur.tr === 'slide') { const p = outCubic(lt / TR), dir = k % 2 ? 1 : -1;
+      prev.el.style.display = 'block'; prev.el.style.transform = `translateX(${-dir * p * SPEC.width}px)`; prev.el.style.opacity = 1 - p * .6; prev.items.forEach(it => applyItem(it, t));
+      cur.el.style.transform = `translateX(${dir * (1 - p) * SPEC.width}px)`; cur.el.style.opacity = 1; }
+    else { const fadeOut = cur.exit ? clamp((cur.end - t) / 0.35) : 1;
+      cur.el.style.transform = `scale(${1 + 0.03 * clamp(lt / Math.max(1, cur.end - cur.start))})`; cur.el.style.opacity = Math.min(fadeOut, cur.tr === 'fade' ? clamp(lt / .35) : 1); }
+    cur.items.forEach(it => applyItem(it, t));
+  }
+  if (CAP) { const si = CAP.findIndex((s, i) => t >= s.start && (i === CAP.length - 1 || t < CAP[i + 1].start)); const cap = document.getElementById('capt');
+    if (si < 0) { cap.innerHTML = ''; return; }
+    const S = CAP[si]; const words = S.words || S.text.split(' ').map((w, i, arr) => [w, S.start + S.dur * i / arr.length]);
+    if (cap.dataset.si != si) { cap.dataset.si = si; cap.innerHTML = words.map(w => `<span>${esc(w[0])}</span>`).join(' '); }
+    cap.style.transform = `scale(${.85 + .15 * outBack(clamp((t - S.start) / .25))})`;
+    words.forEach((w, i) => { const sp = cap.children[i]; const on = t >= w[1] && (i === words.length - 1 || t < words[i + 1][1]);
+      sp.style.color = on ? getComputedStyle(document.documentElement).getPropertyValue('--primary') : (t >= w[1] ? '#fff' : 'rgba(255,255,255,.55)'); sp.style.transform = on ? 'scale(1.12)' : 'none'; }); }
+};
+</script></body></html>
