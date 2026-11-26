@@ -19,6 +19,13 @@ if ! node -e "require('playwright')" 2>/dev/null; then
   say "playwright (motion graphics / thumbnails renderer)"
   npm install -g playwright >/dev/null 2>&1 && npx playwright install --with-deps chromium >/dev/null 2>&1 || say "playwright missing — motion/thumbnail tasks need it"
 fi
+say "installing Claude skills (studio + specialist pack) into ~/.claude/skills"
+SK="$HOME/.claude/skills"; mkdir -p "$SK"
+for d in skills/*/ skills-pack/*/; do
+  n=$(basename "$d"); [ "$n" = "_shared-reference" ] && continue
+  [ -f "$d/SKILL.md" ] && rm -rf "$SK/$n" && cp -r "$d" "$SK/$n"
+done
+mkdir -p "$SK/production-studio-orchestrator/reference" && cp skills-pack/_shared-reference/*.md "$SK/production-studio-orchestrator/reference/" 2>/dev/null || true
 say "self-check"
 python3 -m studio roles >/dev/null && python3 - <<'PY'
 import shutil, subprocess

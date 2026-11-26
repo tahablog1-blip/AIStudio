@@ -9,6 +9,8 @@
 | `.claude/agents/` و`agents/` | ملفات الموظفين الـ 31 كـ sub-agents في Claude Code |
 | `.claude/skills/` و`skills/` | 14 مهارة قابلة للتثبيت |
 | `.claude-plugin/plugin.json` | تثبيت الاستوديو كـ Plugin في Claude Code |
+| `skills-pack/` | حزمة 33 مهارة تخصصية (إرشادات أدوار + `production-studio-orchestrator`) — `bootstrap.sh` بيسطّبها في `~/.claude/skills` |
+| `ai-studio-skill.zip` | مهارة الحساب: ارفعها مرة على claude.ai وهي بتنزّل الاستوديو وكل المهارات في أي جلسة |
 | `docs/01_analysis.md` | المرحلة 1: تحليل التخصصات |
 | `docs/02_org_structure.md` | المرحلة 2: الهيكل والصلاحيات |
 | `docs/roles/` | المرحلة 3: ملف كل موظف |
